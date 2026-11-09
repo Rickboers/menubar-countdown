@@ -55,7 +55,7 @@ Click the countdown in the menu bar:
 | Days | shows whole days left, like `12d`. Under a day it shows `<1d`. |
 | Minutes | shows days, hours and minutes, like `2d 3h 4m` |
 | Seconds | a ticking clock, like `01:02:03` |
-| Launch at Login | starts the countdown when you log in. It's turned on the first time you open the app; click it to turn it off. |
+| Open at Login | starts the countdown when you log in. It's off until you click it; click again to turn it off. |
 | Quit | closes the app |
 
 When the date passes, it shows **Done**. Your date and choice are remembered when you quit.
@@ -65,7 +65,8 @@ When the date passes, it shows **Done**. Your date and choice are remembered whe
 - **"command not found: swiftc" or "xcrun: error".** The developer tools from step 3 aren't installed yet. Run `xcode-select --install` again and wait for it to finish.
 - **"permission denied: ./build.sh".** Run `chmod +x build.sh test.sh` once, then try again.
 - **I can't see it in the menu bar.** On a Mac with a notch, a full menu bar can hide icons behind the notch. Quit an app with a menu bar icon, or hold ⌘ and drag icons to make room.
-- **It started by itself after a restart.** That's Launch at Login. Untick it in the menu, or remove it in System Settings → General → Login Items.
+- **It doesn't come back after a restart.** Tick **Open at Login** in its menu.
+- **It started by itself after a restart.** That's Open at Login. Untick it in the menu, or remove it in System Settings → General → Login Items.
 - **macOS says it can't check the app for malicious software.** That only happens if you copied the app from another Mac. Build it on your own Mac with the steps above instead.
 
 ## Updating
@@ -74,7 +75,7 @@ Download the ZIP again (or `git pull` if you cloned it), quit the countdown, and
 
 ## Removing it
 
-Quit it from its menu, untick **Launch at Login** first if you want, and drag **Countdown.app** to the Trash.
+Quit it from its menu, untick **Open at Login** first if you ticked it, and drag **Countdown.app** to the Trash.
 
 ## How it works
 
@@ -83,7 +84,7 @@ No dependencies and no Xcode project: two Swift files built with one command.
 | File | Job |
 | --- | --- |
 | `Countdown.swift` | the countdown rules: the text it shows and when it next changes |
-| `main.swift` | the menu bar icon, the menu, remembering your choices, and Launch at Login |
+| `main.swift` | the menu bar icon, the menu, remembering your choices, and Open at Login |
 | `build.sh` | builds `Countdown.app` for Apple silicon and Intel and signs it for your own Mac |
 | `test.sh`, `Tests/` | automated checks of the countdown rules |
 

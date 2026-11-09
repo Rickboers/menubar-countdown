@@ -10,7 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let defaults = UserDefaults.standard
     private var timer: Timer?
     private var granularityItems: [NSMenuItem] = []
-    private let loginItem = NSMenuItem(title: "Launch at Login", action: #selector(toggleLogin), keyEquivalent: "")
+    private let loginItem = NSMenuItem(title: "Open at Login", action: #selector(toggleLogin), keyEquivalent: "")
 
     private var target: Date {
         get { Date(timeIntervalSince1970: defaults.double(forKey: "target")) }
@@ -23,10 +23,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ note: Notification) {
         if defaults.object(forKey: "target") == nil { target = Date().addingTimeInterval(7 * 86_400) }
-        if !defaults.bool(forKey: "loginConfigured") {
-            try? SMAppService.mainApp.register()
-            defaults.set(true, forKey: "loginConfigured")
-        }
 
         item.button?.font = .monospacedDigitSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
         item.menu = buildMenu()
@@ -80,6 +76,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         refresh()
     }
 
+    // Opt-in: the app never adds itself to Login Items; only this menu item does.
     @objc private func toggleLogin() {
         if SMAppService.mainApp.status == .enabled {
             try? SMAppService.mainApp.unregister()

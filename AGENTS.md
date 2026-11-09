@@ -14,7 +14,7 @@ The person you're helping may not be a programmer. Explain what you're doing in 
 2. Get the code: `git clone https://github.com/Rickboers/menubar-countdown.git` into a folder they'll keep (for example `~/Documents/menubar-countdown`), or have them use **Code → Download ZIP** on GitHub and unzip it.
 3. Build and start it: `./build.sh && open Countdown.app`.
 4. Offer to copy it to Applications so it survives deleting the folder: `ditto Countdown.app /Applications/Countdown.app && open /Applications/Countdown.app`. Quit the copy running from the project folder first (its menu → Quit), so there's only one.
-5. Tell them to look at the top right of the screen and click the countdown to set their date. Mention that **Launch at Login** is switched on the first time it opens, and that they can untick it in the same menu.
+5. Tell them to look at the top right of the screen and click the countdown to set their date. If they want it to start every time they log in, they tick **Open at Login** in the same menu. It's off until they do.
 
 Requirements: macOS 14 Sonoma or newer, Apple silicon or Intel.
 
@@ -25,7 +25,7 @@ After any code change: quit the running app, run `./build.sh`, then `open Countd
 | File | Job |
 | --- | --- |
 | `Countdown.swift` | pure logic, no AppKit: `Granularity`, `countdownText(_:_:)` (the menu bar text) and `secondsUntilNextChange(_:_:)` (when the timer should next fire) |
-| `main.swift` | the app: status item, menu with date picker, display modes, Launch at Login (`SMAppService.mainApp`), and settings in `UserDefaults` (`target`, `granularity`, `loginConfigured`) |
+| `main.swift` | the app: status item, menu with date picker, display modes, Open at Login (`SMAppService.mainApp`, opt-in only), and settings in `UserDefaults` (`target`, `granularity`) |
 | `build.sh` | compiles a universal (arm64 + x86_64) binary, writes `Info.plist`, ad-hoc signs the app |
 | `test.sh`, `Tests/main.swift` | compiles `Countdown.swift` with the tests and runs them; exits non-zero on a failure |
 
@@ -37,8 +37,9 @@ Keep these unless the person explicitly asks otherwise.
 2. **Logic goes in `Countdown.swift`** (no AppKit there) and gets a test in `Tests/main.swift`. `main.swift` only wires it to the menu bar.
 3. **No data leaves the Mac.** No network requests, analytics, update checks or third-party code. The app needs no permissions; don't add entitlements or permission prompts without telling the person why.
 4. **No dependencies and no Xcode project.** It must keep building with `./build.sh` and only Apple's command line tools.
-5. **Keep settings compatible.** Don't rename the `UserDefaults` keys, or people lose their date when they update.
-6. **Never commit personal data**, such as account names, emails, Apple team IDs, or file paths from your own machine. Don't commit `Countdown.app`; it's build output and `.gitignore` excludes it.
+5. **Ask before changing the Mac.** Open at Login stays opt-in: the app never adds itself to Login Items or changes anything else without the person ticking it in the menu.
+6. **Keep settings compatible.** Don't rename the `UserDefaults` keys, or people lose their date when they update.
+7. **Never commit personal data**, such as account names, emails, Apple team IDs, or file paths from your own machine. Don't commit `Countdown.app`; it's build output and `.gitignore` excludes it.
 
 ## Common changes
 
@@ -53,7 +54,7 @@ Update the README's "Using it" table and `CHANGELOG.md` whenever what people see
 
 1. `./test.sh` must print `All countdown tests passed`.
 2. `./build.sh` must finish with `Built Countdown.app`.
-3. By hand: quit the old copy, `open Countdown.app`, and check the menu bar text in each mode, changing the date, Launch at Login on and off, and Quit.
+3. By hand: quit the old copy, `open Countdown.app`, and check the menu bar text in each mode, changing the date, Open at Login on and off, and Quit.
 
 CI (`.github/workflows/test.yml`) runs `./test.sh` and `./build.sh` on macOS for every push and pull request.
 
