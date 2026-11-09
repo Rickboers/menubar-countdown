@@ -1,0 +1,10 @@
+.DS_Store
+Countdown.app/
+*.o
+*.dSYM/
+.build/
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+.env*
